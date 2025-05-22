@@ -21,3 +21,11 @@ class Cave:
     
     def link_cave(self, cave_to_link, direction):
         self.linked_caves[direction] = cave_to_link
+    
+    def print_details(self):
+        print(f"""
+    Name: {self.name}
+    Description: {self.desc}
+        """)
+        for cave, direction in self.linked_caves.items():
+            print(f"Linked cave: {cave.get_name()} to the {direction}") # trying to do this but it aint work
