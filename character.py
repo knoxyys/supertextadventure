@@ -26,6 +26,9 @@ class Enemy(Character):
         super().__init__(char_name, char_description)
         self.weakness = None
     
+    def __str__(self):
+        return f"{self.name} - {self.description}"
+    
     def set_weakness(self, weakness):
         self.weakness = weakness
     

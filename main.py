@@ -10,10 +10,10 @@ grotto.set_description("A small cave with ancient graffiti")
 
 cavern.link_cave(grotto, "north")
 grotto.link_cave(cavern, "south")
-grotto.link_cave(dungeon, "left")
-dungeon.link_cave(grotto, "east")
+grotto.link_cave(dungeon, "east")
+dungeon.link_cave(grotto, "west")
 
-mark = Enemy("Mark", "A smelly Wumpus")
+mark = Enemy("Mark", "A ginger Wumpus with a bad attitude")
 dungeon.set_character(mark)
 mark.set_conversation("i smell like fart ghrrrr")
 mark.set_weakness("shower")
@@ -22,6 +22,24 @@ current_cave = cavern
 while True:
     print('\n')
     current_cave.get_details()
-    current_cave.get_character() # fix this lolol
+    inhabitant = current_cave.get_character()
+    if inhabitant is not None:
+        inhabitant.describe()
+        inhabitant.talk()
+    else: print("There is no one here.")
     command = input('> ').lower()
+    if command == "fight":
+        if inhabitant is not None and isinstance(inhabitant, Enemy):
+            # Fight with the inhabitant, if there is one
+            print("What will you fight with?")
+            fight_with = input()
+            if inhabitant.fight(fight_with) == True:
+                # What happens if you win?
+                print("Bravo,hero you won the fight!")
+                current_cave.set_character(None)
+            else:
+                print("Scurry home, you lost the fight.") # fix this maybe
+        else:
+            print("There is no one here to fight with")
+
     current_cave = current_cave.move(command)
