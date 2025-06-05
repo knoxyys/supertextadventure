@@ -28,7 +28,18 @@ grotto.set_character(josephine)
 
 beer = Item("Beer", 5, 1)
 beer.set_desc("For legal reasons this is apple juice in a beer can.")
+beer.set_usecase("You feel so much better.")
 grotto.set_item(beer) # set_item so it differs from character
+
+popsicle = Item("Popsicle", 2, 3)
+popsicle.set_desc("A frozen treat on a stick.")
+popsicle.set_usecase("You now know Mark's weakness is silver somehow.")
+cavern.set_item(popsicle)
+
+silver_sword = Item("Silver Sword", 10, 1)
+silver_sword.set_desc("A sword made of silver, hmm...")
+dungeon.set_item(silver_sword)
+
 
 
 # main loop
@@ -40,7 +51,7 @@ while dead == False:
     item = current_cave.get_item()
 
     if item is not None:
-        print(f"You see a {item.get_name()} here: {item.get_desc()}")
+        print(f"You see {str(item.get_quantity())} {item.get_name()} here: {item.get_desc()}")
 
     if inhabitant is not None:
         inhabitant.describe()
@@ -51,10 +62,15 @@ while dead == False:
         print("What will you fight with?")
         fight_with = input('> ')
         if inhabitant.fight(fight_with) == True:
-            print("Bravo hero, you won the fight!")
-            current_cave.set_character(None)
-            current_cave.get_details()
-            inhabitant = current_cave.get_character()
+            for bag_item in bag:
+                if bag_item.get_name().lower() == fight_with.lower():
+                    print("Bravo hero, you won the fight!")
+                    current_cave.set_character(None)
+                    current_cave.get_details()
+                    inhabitant = current_cave.get_character()
+                    break
+                else: print("You don't have that item in your bag.")
+
         else:
             print("Scurry home, you lost the fight.\nGame end.")
             dead = True
@@ -75,10 +91,32 @@ while dead == False:
     
     elif command == 'steal' and isinstance(inhabitant, Enemy):
         inhabitant.steal()
-
-    elif command == 'use' and item is not None:
-        item.use()
-
+    
+    elif command == 'take' and item is not None:
+        print(f"You take the {item.get_name()} from the cave.")
+        bag.append(item)
+        current_cave.set_item(None)
+    
+    elif command == 'bag':
+        for item in bag:
+            print(item.get_name() + " (x" + str(item.get_quantity()) + ")")
+        if len(bag) == 0:
+            print("Your bag is empty.")
+    
+    elif command == 'use' and len(bag) > 0:
+        print("What do you want to use?")
+        use_item = input('> ')
+        found = False
+        for item in bag:
+            if item.get_name().lower() == use_item.lower():
+                item.use()
+                item.set_quantity(item.get_quantity() - 1)
+                if item.get_quantity() <= 0:
+                    bag.remove(item)
+                found = True
+                break
+        if not found:
+            print("You don't have that item in your bag.")
     
     else: current_cave = current_cave.move(command)
 
