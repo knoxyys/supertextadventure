@@ -22,7 +22,9 @@ class Character():
         return True
 
 class Enemy(Character):
+    enemies_to_defeat = 0
     def __init__(self, char_name, char_description):
+        Enemy.enemies_to_defeat = Enemy.enemies_to_defeat + 1
         super().__init__(char_name, char_description)
         self.weakness = None
     
@@ -36,8 +38,10 @@ class Enemy(Character):
         return self.weakness
     
     def fight(self, combat_item):
-        if self.weakness.lower() in combat_item.lower():
+        if self.weakness.lower() in combat_item.lower(): # e.g. if weakness is "silver" and combat_item is "silver sword"
+            Enemy.enemies_to_defeat = Enemy.enemies_to_defeat - 1
             print("You fend " + self.name + " off with the " + combat_item )
+            print("Bravo hero, you won the fight!")
             return True
         else:
             print(self.name + " swallows you, little wimp")
@@ -53,4 +57,3 @@ class Friend(Character):
         self.feeling = None
     def pat(self):
         print(self.name + " pats you back!")
-    # What other methods could your Friend class have?

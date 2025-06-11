@@ -45,10 +45,12 @@ dungeon.set_item(silver_sword)
 # main loop
 current_cave = cavern
 while dead == False:
+
     print('\n')
     current_cave.get_details()
     inhabitant = current_cave.get_character()
     item = current_cave.get_item()
+
 
     if item is not None:
         print(f"You see {str(item.get_quantity())} {item.get_name()} here: {item.get_desc()}")
@@ -61,16 +63,16 @@ while dead == False:
     if command == 'fight' and isinstance(inhabitant, Enemy):
         print("What will you fight with?")
         fight_with = input('> ')
-        if inhabitant.fight(fight_with) == True:
-            for bag_item in bag:
-                if bag_item.get_name().lower() == fight_with.lower():
-                    print("Bravo hero, you won the fight!")
+        for bag_item in bag:
+            if bag_item.get_name().lower() == fight_with.lower():
+                if inhabitant.fight(fight_with) == True:
                     current_cave.set_character(None)
+                    if Enemy.enemies_to_defeat == 0:
+                        print("Congratulations, you have survived another adventure!")
+                        dead = True
                     current_cave.get_details()
                     inhabitant = current_cave.get_character()
                     break
-                else: print("You don't have that item in your bag.")
-
         else:
             print("Scurry home, you lost the fight.\nGame end.")
             dead = True
@@ -122,4 +124,4 @@ while dead == False:
 
 
 
-# commands are move(dir), fight, talk, pat, use, steal
+# commands are move(dir), fight, talk, pat, use, steal, take, bag
